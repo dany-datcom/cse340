@@ -20,19 +20,27 @@ app.set('views', path.join(__dirname, 'src/views'));
 //Server static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// Define routes
+// Home route
 app.get('/', async (req, res) => {
     const title = 'Home';
     res.render('home', { title });
 });
-
+// Organizations route
 app.get('/organizations', (req, res) => {
   const title = 'Organizations';
   res.render('organization', { title });
 });
+
+// Projects route
 app.get('/projects', (req, res) => {
   const title = 'Projects';
   res.render('projects', { title });
+});
+// Categories route
+app.get('/categories', (req, res) => {
+  const title = 'Categories';
+  res.render('categories', { title });
 });
 
 
