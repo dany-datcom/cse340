@@ -27,8 +27,8 @@ app.get('/', async (req, res) => {
     res.render('home', { title });
 });
 // Organizations route
-app.get('/organizations', (req, res) => {
-  const title = 'Organizations';
+app.get('/organization', (req, res) => {
+  const title = 'Organization';
   res.render('organization', { title });
 });
 

@@ -1,29 +1,203 @@
-html, body {
-    background-color: lightblue;
-    font-family: Arial, sans-serif;
+/* ============================= */
+/*        GOOGLE FONT            */
+/* ============================= */
+
+/* Importamos una tipografía moderna y profesional */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+
+/* ============================= */
+/*        RESET BÁSICO           */
+/* ============================= */
+
+* {
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    box-sizing: border-box;
 }
+
+
+/* ============================= */
+/*        VARIABLES (COLORS)     */
+/* ============================= */
+
+:root {
+    --primary-color: #1f3c88;      /* Azul profesional */
+    --secondary-color: #4a69bd;    /* Azul suave */
+    --accent-color: #38ada9;       /* Verde elegante */
+    --background-color: #f5f7fa;   /* Gris muy claro */
+    --text-color: #2f3640;         /* Gris oscuro */
+    --light-gray: #dcdde1;
+    --white: #ffffff;
+}
+
+
+/* ============================= */
+/*        BODY GENERAL           */
+/* ============================= */
+
 body {
-    nav {
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
 
-        li {
-            display: inline;
-            margin-right: 15px;
-        }
 
-        a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
+/* ============================= */
+/*        NAVIGATION             */
+/* ============================= */
 
-            &:hover {
-                color: #0066cc;
-            }
-        }
+nav {
+    background-color: var(--primary-color);
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--white);
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+}
+
+/* Hover elegante */
+nav ul li a:hover {
+    
+    transform: translateY(-2px);
+}
+
+
+/* ============================= */
+/*        HEADER TITLE           */
+/* ============================= */
+
+h1 {
+    text-align: center;
+    margin: 3rem 0 2rem;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+
+
+/* ============================= */
+/*        CATEGORIES LIST        */
+/* ============================= */
+
+ul {
+    
+    margin: 0 auto 4rem;
+    list-style: none;
+    padding: 0 1rem;
+}
+
+ul li {
+    
+    
+    padding: 1.2rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Efecto hover tipo card */
+ul li:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+/* ============================= */
+/*        BUTTON STYLE           */
+/* ============================= */
+
+button {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+
+/* ============================= */
+/*        FOOTER                 */
+/* ============================= */
+
+footer {
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.9rem;
+}
+
+
+/* ============================= */
+/*        RESPONSIVE DESIGN      */
+/* ============================= */
+
+
+/* 📱 MOBILE (hasta 768px) */
+@media (max-width: 768px) {
+
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    ul li {
+        font-size: 1rem;
+    }
+}
+
+
+/* 📱 TABLET (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    ul li {
+        font-size: 1.05rem;
+    }
+}
+
+
+/* 🖥 DESKTOP (1025px+) */
+@media (min-width: 1025px) {
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    ul li {
+        font-size: 1.1rem;
     }
 }
