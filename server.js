@@ -2,6 +2,8 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import express from'express';
 import dotenv from 'dotenv';
+import { testConnection } from './src/models/db.js';
+import { getAllOrganizations } from './src/models/organizations.js';
 dotenv.config();
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'development';
 const PORT = process.env.PORT || 3000;
@@ -27,9 +29,10 @@ app.get('/', async (req, res) => {
     res.render('home', { title });
 });
 // Organizations route
-app.get('/organization', (req, res) => {
-  const title = 'Organization';
-  res.render('organization', { title });
+app.get('/organization', async (req, res) => {
+  const organizations = await getAllOrganizations();
+  const title = 'Our Partner Organizations';
+  res.render('organization', { title, organizations });
 });
 
 // Projects route
@@ -45,7 +48,12 @@ app.get('/categories', (req, res) => {
 
 
 
-app.listen(PORT, () => {
-  console.log(`Server is running at http://127.0.0.1:${PORT}`);
-  console.log(`Environment: ${NODE_ENV}`);
+app.listen(PORT, async () => {
+  try {
+    await testConnection();
+    console.log(`Server is running at http://127.0.0.1:${PORT}`);
+    console.log(`Environment: ${NODE_ENV}`);
+  } catch (error) {
+    console.error('Failed to start server due to database connection error:', error.message);
+  }
 });
