@@ -11,3 +11,41 @@ VALUES
 	('BrightFuture Builders', 'A nonprofit focused on improving community infrastructure through sustainable construction projects.', 'info@brightfuturebuilders.org', 'brightfuture-logo.png'),
 	('GreenHarvest Growers', 'An urban farming collective promoting food sustainability and education in local neighborhoods.', 'contact@greenharvest.org', 'greenharvest-logo.png'),
 	('UnityServe Volunteers', 'A volunteer coordination group supporting local charities and service initiatives.', 'hello@unityserve.org', 'unityserve-logo.png');
+
+
+CREATE TABLE service_project (
+	project_id SERIAL PRIMARY KEY,
+	organization_id INT NOT NULL,
+	title VARCHAR(100) NOT NULL,
+	description TEXT ,
+	location VARCHAR(100) NOT NULL,
+	date DATE NOT NULL,
+	CONSTRAINT fk_organization
+		FOREIGN KEY (organization_id)
+		REFERENCES organization(organization_id)
+);
+
+INSERT INTO service_project
+( organization_id, title, description, location ,date)
+VALUES
+-- BrightFuture Builders (1)
+(1, 'Community Park Renovation', 'Renovation of playground equipment and walking paths in the local community park.', 'San Jose', '2026-04-15'),
+(1, 'Affordable Housing Repair', 'Volunteers assist with basic home repairs for low-income families.', 'Alajuela', '2026-05-10'),
+(1, 'School Classroom Upgrade', 'Upgrading desks, lighting, and painting classrooms in a rural school.', 'Cartago', '2026-06-05'),
+(1, 'Community Bridge Construction', 'Building a small pedestrian bridge for safer access to the village.', 'Heredia', '2026-07-20'),
+(1, 'Disaster Relief Housing Support', 'Constructing temporary shelters after seasonal flooding.', 'Limon', '2026-08-12'),
+
+-- GreenHarvest Growers (2)
+(2, 'Urban Garden Installation', 'Creating a community garden to promote local food production.', 'San Jose', '2026-04-22'),
+(2, 'School Gardening Workshop', 'Teaching students how to grow vegetables sustainably.', 'Alajuela', '2026-05-18'),
+(2, 'Neighborhood Compost Program', 'Launching a composting initiative to reduce food waste.', 'Heredia', '2026-06-14'),
+(2, 'Community Tree Planting', 'Planting fruit trees in public spaces to support urban agriculture.', 'Cartago', '2026-07-08'),
+(2, 'Farmers Market Support', 'Helping local farmers organize and manage a weekly farmers market.', 'San Jose', '2026-08-03'),
+
+-- UnityServe Volunteers (3)
+(3, 'Food Bank Distribution', 'Volunteers distribute food packages to families in need.', 'San Jose', '2026-04-12'),
+(3, 'Clothing Donation Drive', 'Collecting and distributing clothing for homeless shelters.', 'Alajuela', '2026-05-07'),
+(3, 'Community Cleanup Day', 'Volunteers clean parks and public areas in the neighborhood.', 'Heredia', '2026-06-11'),
+(3, 'Senior Center Assistance', 'Providing companionship and help with activities for elderly residents.', 'Cartago', '2026-07-02'),
+(3, 'Back-to-School Supply Drive', 'Distributing school supplies to children from low-income families.', 'Limon', '2026-08-15');
+
