@@ -4,11 +4,11 @@
     </h1>
 
     <ul>
-
-        <li>Enviromental</li>
-        <li>Educational</li>
-        <li>Comunity Service</li>
-        <li>Health and wellness</li>
+        <% categories.forEach(category => { %>
+            <li>
+             <%= category.name %>              
+            </li>
+        <% }) %>
     </ul>
 
 

@@ -49,3 +49,36 @@ VALUES
 (3, 'Senior Center Assistance', 'Providing companionship and help with activities for elderly residents.', 'Cartago', '2026-07-02'),
 (3, 'Back-to-School Supply Drive', 'Distributing school supplies to children from low-income families.', 'Limon', '2026-08-15');
 
+
+CREATE TABLE categories (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE project_categories (
+    project_id INT REFERENCES service_projects(project_id),
+    category_id INT REFERENCES categories(category_id),
+    PRIMARY KEY (project_id, category_id)
+);
+
+INSERT INTO categories (name) VALUES
+('Education'),
+('Environment'),
+('Community Service');
+
+INSERT INTO project_categories (project_id, category_id) VALUES
+(1,3),
+(2,3),
+(3,3),
+(4,3),
+(5,2),
+(6,1),
+(7,1),
+(8,1),
+(9,2),
+(10,3),
+(11,3),
+(12,3),
+(13,2),
+(14,3),
+(15,3);
