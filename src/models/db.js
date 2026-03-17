@@ -1,8 +1,10 @@
 import { Pool } from 'pg';
-
+console.log("DB_URL:", process.env.DB_URL)
 const pool = new Pool({
     connectionString: process.env.DB_URL,
-    ssl: true
+    ssl: {
+        rejectUnauthorized: false // Importante para conexiones a servicios cloud
+    }
 });
 
 let db = null;
@@ -42,7 +44,7 @@ const testConnection = async () => {
         console.log('Database connection successful. Current time:', result.rows[0].current_time);
         return true;
     } catch (error) {
-        console.error('Database connection failed:', error.message);
+        console.error('Database connection failed:', error);
         return false;
     }   
 };
