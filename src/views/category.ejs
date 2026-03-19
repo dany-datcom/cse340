@@ -1,17 +1,19 @@
 <%- include('partials/header.ejs') %>
 
-<h1>
-    <%= category.name %>
-</h1>
+    <h1>
+        <%= category.name %>
+    </h1>
 
-<ul>
-    <% projects.forEach(project => { %>
-        <li>
-            <a href="/project/<%= project.project_id %>">
-                <%= project.title %>
-            </a>
-        </li>
-    <% }) %>
-</ul>
+    <h2>Projects in this category:</h2>
 
-<%- include('partials/footer.ejs') %>
+    <ul>
+        <% projects.forEach(project=> { %>
+            <li>
+                <a href="/project/<%= project.project_id %>">
+                    <%= project.title %>
+                </a>
+            </li>
+            <% }) %>
+    </ul>
+
+    <%- include('partials/footer.ejs') %>

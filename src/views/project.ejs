@@ -21,9 +21,10 @@
             </a>
         </p>
         <div>
+            <h3>Categories:</h3>
             <% categories.forEach(cat=> { %>
-                <a href="/category/<%= cat.id %>">
-                    #<%= cat.name %>
+                <a href="/category/<%= cat.category_id %>">
+                    <%= cat.name %>
                 </a>
                 <% }) %>
         </div>

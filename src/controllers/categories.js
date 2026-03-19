@@ -12,7 +12,9 @@ const showCategoriesPage = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).render("errors/500");
+        res.status(500).render("errors/500", {
+            title: "Server Error"
+        });
     }
 };
 
@@ -31,7 +33,9 @@ const buildCategoryPage = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).render("errors/500");
+        res.status(500).render("errors/500", {
+            title: "Server Error"
+        });
     }
 };
 
