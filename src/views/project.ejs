@@ -20,6 +20,13 @@
                 <%= project.organization_name %>
             </a>
         </p>
+        <div>
+            <% categories.forEach(cat=> { %>
+                <a href="/category/<%= cat.id %>">
+                    #<%= cat.name %>
+                </a>
+                <% }) %>
+        </div>
 
     </main>
     </body>
