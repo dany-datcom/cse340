@@ -2,7 +2,6 @@
 /*        GOOGLE FONT            */
 /* ============================= */
 
-/* Importamos una tipografía moderna y profesional */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 
@@ -22,11 +21,11 @@
 /* ============================= */
 
 :root {
-    --primary-color: #1f3c88;      /* Azul profesional */
-    --secondary-color: #4a69bd;    /* Azul suave */
-    --accent-color: #38ada9;       /* Verde elegante */
-    --background-color: #f5f7fa;   /* Gris muy claro */
-    --text-color: #2f3640;         /* Gris oscuro */
+    --primary-color: #1f3c88;
+    --secondary-color: #4a69bd;
+    --accent-color: #38ada9;
+    --background-color: #f5f7fa;
+    --text-color: #2f3640;
     --light-gray: #dcdde1;
     --white: #ffffff;
 }
@@ -41,6 +40,21 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
+}
+
+
+/* ============================= */
+/*        LINKS                  */
+/* ============================= */
+
+a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--accent-color);
 }
 
 
@@ -62,19 +76,26 @@ nav ul {
 }
 
 nav ul li a {
-    text-decoration: none;
-    color: var(--white);
+    color: var(--black);
     font-weight: 500;
     font-size: 1rem;
-    transition: all 0.3s ease;
     padding: 0.5rem 0.8rem;
     border-radius: 6px;
+    transition: all 0.3s ease;
 }
 
-/* Hover elegante */
 nav ul li a:hover {
-    
+    background-color: var(--secondary-color);
     transform: translateY(-2px);
+}
+
+
+/* ============================= */
+/*        MAIN CONTENT           */
+/* ============================= */
+
+main {
+    padding: 0 1rem;
 }
 
 
@@ -91,31 +112,51 @@ h1 {
 
 
 /* ============================= */
-/*        CATEGORIES LIST        */
+/*        LISTS (CARDS)          */
 /* ============================= */
 
 ul {
-    
+    max-width: 800px;
     margin: 0 auto 4rem;
     list-style: none;
     padding: 0 1rem;
 }
 
 ul li {
-    
-    
+    background-color: var(--white);
+    margin-bottom: 1rem;
     padding: 1.2rem 1.5rem;
-    border-radius: 10px;
+    border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     font-size: 1.1rem;
     font-weight: 500;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Efecto hover tipo card */
 ul li:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+/* ============================= */
+/*        CATEGORY TAGS          */
+/* ============================= */
+
+div a {
+    display: inline-block;
+    margin: 0.3rem;
+    padding: 0.4rem 0.8rem;
+    background-color: var(--light-gray);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+}
+
+div a:hover {
+    background-color: var(--accent-color);
+    color: var(--white);
 }
 
 
@@ -157,8 +198,7 @@ footer {
 /*        RESPONSIVE DESIGN      */
 /* ============================= */
 
-
-/* 📱 MOBILE (hasta 768px) */
+/* 📱 MOBILE */
 @media (max-width: 768px) {
 
     nav ul {
@@ -176,8 +216,7 @@ footer {
     }
 }
 
-
-/* 📱 TABLET (769px - 1024px) */
+/* 📱 TABLET */
 @media (min-width: 769px) and (max-width: 1024px) {
 
     h1 {
@@ -189,8 +228,7 @@ footer {
     }
 }
 
-
-/* 🖥 DESKTOP (1025px+) */
+/* 🖥 DESKTOP */
 @media (min-width: 1025px) {
 
     h1 {
