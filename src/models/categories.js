@@ -9,7 +9,7 @@ export const getAllCategories = async () => {
     return result.rows;
 };
 
-export async function getCategoryById(id) {
+export const getCategoryById = async (id) => {
   const result = await db.query(
     "SELECT * FROM categories WHERE category_id = $1",
     [id]
@@ -17,7 +17,7 @@ export async function getCategoryById(id) {
   return result.rows[0];
 }
 
-export async function getProjectsByCategoryId(categoryId) {
+export const getProjectsByCategoryId = async (categoryId) => {
   const result = await db.query(
     `SELECT p.*
      FROM service_project p
@@ -29,7 +29,7 @@ export async function getProjectsByCategoryId(categoryId) {
   return result.rows;
 }
 
-export async function getCategoriesByProjectId(projectId) {
+export const getCategoriesByProjectId = async (projectId) => {
   const result = await db.query(
     `SELECT c.*
      FROM categories c
