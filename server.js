@@ -3,6 +3,8 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { testConnection } from './src/models/db.js';
 import router from './src/controllers/routes.js';
+import session from 'express-session';
+import flash from './src/middleware/flash.js';
 
 // Define the the application environment
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
@@ -14,6 +16,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {maxAge: 60 * 60 * 1000}
+}));
+
+app.use(flash)
+
+app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded bodies (for form submissions)
+app.use(express.json()); // Middleware to parse JSON bodies (for API requests)
 
 /**
   * Configure Express middleware
