@@ -5,14 +5,21 @@ import {
     showProjectDetailsPage,
     showNewProjectForm,
     processNewProjectForm,
-    projectValidation
+    projectValidation,
+    showEditProjectForm,
+    processEditProjectForm
 } from './service_projects.js';
 import { testErrorPage } from './errors.js';
 import {
     showCategoriesPage,
     buildCategoryPage,
     showAssignCategoriesForm,
-    processAssignCategoriesForm
+    processAssignCategoriesForm,
+    showEditCategoryForm,
+    showNewCategoryForm,
+    processEditCategoryForm,
+    processNewCategoryForm,
+    categoryValidation
 } from './categories.js';
 import {
     showOrganizationDetailsPage,
@@ -38,8 +45,18 @@ router.post('/new-project', projectValidation, processNewProjectForm);
 router.get('/projects', showProjectsPage);
 // Project details route
 router.get('/project/:id', showProjectDetailsPage);
+// Mostrar formulario de edición
+router.get("/edit-project/:id", showEditProjectForm);
+//Procesar formulario de edición
+router.post("/edit-project/:id", processEditProjectForm);
 // Categories route
 router.get('/categories', showCategoriesPage);
+
+router.get('/new-category', showNewCategoryForm);
+router.post('/new-category', categoryValidation, processNewCategoryForm);
+
+router.get('/edit-category/:id', showEditCategoryForm);
+router.post('/edit-category/:id', categoryValidation, processEditCategoryForm);
 // Routes to handle the assign categories to project form
 router.get('/assign-categories/:projectId', showAssignCategoriesForm);
 

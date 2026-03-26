@@ -64,11 +64,43 @@ const updateCategoryAssignments = async(projectId, categoryIds) => {
     }
 }
 
+const createCategory = async (name) => {
+    const result = await db.query(
+        `INSERT INTO categories (name)
+         VALUES ($1)
+         RETURNING category_id`,
+        [name]
+    );
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create category');
+    }
+
+    return result.rows[0].category_id;
+};
+
+const updateCategory = async (id, name) => {
+    const result = await db.query(
+        `UPDATE categories
+         SET name = $1
+         WHERE category_id = $2
+         RETURNING category_id`,
+        [name, id]
+    );
+
+    if (result.rows.length === 0) {
+        throw new Error('Category not found');
+    }
+
+    return result.rows[0].category_id;
+};
 export {
     getAllCategories,
     getCategoryById,
     getProjectsByCategoryId,
     getCategoriesByProjectId,
     updateCategoryAssignments,
-    assignCategoryToProject
+    assignCategoryToProject,
+    createCategory,
+    updateCategory
 };

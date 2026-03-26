@@ -1,7 +1,13 @@
-import { getUpcomingProjects, getProjectDetails, createProject } from '../models/service_project.js';
+import {
+    getUpcomingProjects,
+    getProjectDetails,
+    createProject,
+    updateProject,
+    getAllServiceProjects
+} from '../models/service_project.js';
 import { getAllOrganizations } from '../models/organizations.js';
 import { getCategoriesByProjectId } from '../models/categories.js';
-import { body, validationResult } from 'express-validator'; 
+import { body, validationResult } from 'express-validator';
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
 
 const projectValidation = [
@@ -102,5 +108,52 @@ const processNewProjectForm = async (req, res) => {
     }
 }
 
+const showEditProjectForm = async (req, res) => {
+    try {
+        const projectId = req.params.id;
 
-export { showProjectsPage, showProjectDetailsPage, showNewProjectForm, projectValidation, processNewProjectForm};
+        const project = await getProjectDetails(projectId);
+
+        // 🔥 arreglo de fecha
+        if (project && project.date) {
+            project.date = new Date(project.date).toISOString().split("T")[0];
+        } else {
+            project.date = "";
+        }
+
+        // 🔥 ESTO ES LO QUE TE ESTÁ FALLANDO
+        const organizations = await getAllOrganizations();
+
+        console.log("organizations:", organizations); // 👈 DEBUG
+
+        res.render("edit-project", {
+            title: "Edit Project",
+            project,
+            organizations
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error loading edit form");
+    }
+};
+
+
+const processEditProjectForm = async (req, res) => {
+    try {
+        const projectId = req.params.id;
+
+        const { title, description, location, date, organization_id } = req.body;
+
+        await updateProject(projectId, title, description, location, date, organization_id);
+        req.flash('success', 'Project updated successfully!');
+        res.redirect(`/project/${projectId}`);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error updating project");
+    }
+};
+
+
+export { showProjectsPage, showProjectDetailsPage, showNewProjectForm, projectValidation, processNewProjectForm, showEditProjectForm, processEditProjectForm };
