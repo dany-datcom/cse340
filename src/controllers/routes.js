@@ -46,9 +46,9 @@ router.get('/projects', showProjectsPage);
 // Project details route
 router.get('/project/:id', showProjectDetailsPage);
 // Mostrar formulario de edición
-router.get("/edit-project/:id",projectValidation, showEditProjectForm);
+router.get("/edit-project/:id", showEditProjectForm);
 //Procesar formulario de edición
-router.post("/edit-project/:id", processEditProjectForm);
+router.post("/edit-project/:id",projectValidation, processEditProjectForm);
 // Categories route
 router.get('/categories', showCategoriesPage);
 
