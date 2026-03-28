@@ -203,6 +203,9 @@ form {
 
 .form-group {
     margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 input, textarea, select {
@@ -212,6 +215,10 @@ input, textarea, select {
     border: 1px solid var(--light-gray);
     border-radius: 6px;
     font-family: inherit;
+}
+
+input[type="checkbox"] {
+    width: auto;
 }
 
 input:focus, textarea:focus, select:focus {
