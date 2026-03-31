@@ -1,5 +1,18 @@
 import express from 'express';
+import { 
+    showUserRegistrationForm, 
+    processUserRegistrationForm,
+    userRegistrationValidation,
+    processLoginForm,
+    showLoginForm,
+    requireAuth,
+    processLogout,
+    showDashboard, 
+    requireLogin
+} from './users.js';
+
 import { showHomePage } from './index.js';
+
 import {
     showProjectsPage,
     showProjectDetailsPage,
@@ -9,7 +22,9 @@ import {
     showEditProjectForm,
     processEditProjectForm
 } from './service_projects.js';
+
 import { testErrorPage } from './errors.js';
+
 import {
     showCategoriesPage,
     buildCategoryPage,
@@ -21,6 +36,7 @@ import {
     processNewCategoryForm,
     categoryValidation
 } from './categories.js';
+
 import {
     showOrganizationDetailsPage,
     showNewOrganizationForm,
@@ -34,15 +50,15 @@ import {
 const router = express.Router();
 
 // Home route
-router.get('/', showHomePage);
+router.get('/', requireAuth,showHomePage);
 // Organizations route
-router.get('/organization', showOrganizationsPage);
+router.get('/organizations',requireAuth, showOrganizationsPage);
 //Route for new project page
 router.get('/new-project', showNewProjectForm);
 // Route to handle new project form submission
 router.post('/new-project', projectValidation, processNewProjectForm);
 // Projects route
-router.get('/projects', showProjectsPage);
+router.get('/projects', requireAuth, showProjectsPage);
 // Project details route
 router.get('/project/:id', showProjectDetailsPage);
 // Mostrar formulario de edición
@@ -50,7 +66,7 @@ router.get("/edit-project/:id", showEditProjectForm);
 //Procesar formulario de edición
 router.post("/edit-project/:id",projectValidation, processEditProjectForm);
 // Categories route
-router.get('/categories', showCategoriesPage);
+router.get('/categories', requireAuth, showCategoriesPage);
 
 router.get('/new-category', showNewCategoryForm);
 router.post('/new-category', categoryValidation, processNewCategoryForm);
@@ -75,6 +91,15 @@ router.get('/category/:id', buildCategoryPage);
 router.get('/new-organization', showNewOrganizationForm);
 // Process new organization form submission
 router.post('/new-organization', organizationValidation, processNewOrganizationForm);
+// User registration routes
+router.get('/register', showUserRegistrationForm);
+router.post('/register',userRegistrationValidation, processUserRegistrationForm);
+// User login routes
+router.get('/login', showLoginForm);
+router.post('/login', processLoginForm);
+router.get('/logout', processLogout);
+
+router.get('/dashboard', requireLogin, showDashboard);
 
 
 
