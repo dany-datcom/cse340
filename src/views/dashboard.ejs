@@ -3,11 +3,20 @@
 <main>
     <h1><%= title %></h1>
 
-    <h2>Dashboard</h2>
+    <section>
+        <h2>Dashboard</h2>
 
-    <p>Name: <%= name %></p>
+        <p><strong>Name:</strong> <%= name %></p>
+        <p><strong>Email:</strong> <%= email %></p>
+    </section>
 
-    <p>Username: <%= email %></p>
+    <!-- Admin-only section -->
+    <% if (user && user.role_name === 'admin') { %>
+        <section>
+            <h3>Admin Panel</h3>
+            <a href="/users">View All Users</a>
+        </section>
+    <% } %>
 
 </main>
 
