@@ -1,21 +1,26 @@
 <%- include('partials/header') %>
+
     <h1>
         <%= title %>
     </h1>
 
-    <ul>
-        <% categories.forEach(category=> { %>
-            <li>
-                <a href="/category/<%= category.category_id %>">
-                    <%= category.name %>
-                </a>
-            </li>
-            <% }) %>
+    <ul class="category-list">
+        <% if (categories && categories.length> 0) { %>
+            <% categories.forEach(category=> { %>
+                <li>
+                    <a href="/category/<%= category.category_id %>">
+                        <%= category.name %>
+                    </a>
+                </li>
+                <% }) %>
+                    <% } else { %>
+                        <li>No categories available.</li>
+                        <% } %>
     </ul>
-<div class="action-buttons">
-    <p>
-    <a href="/new-category">+ Create New Category</a>
-</p>
-</div>
+    <% if (isAdmin) { %>
+        <div class="center-buttons">
 
-    <%- include('partials/footer') %>
+            <a href="/new-category" class="btn btn-secondary">Create New Category</a>
+        </div>
+        <% } %>
+            <%- include('partials/footer') %>

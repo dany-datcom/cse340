@@ -2,108 +2,144 @@ import db from './db.js';
 import bcrypt from 'bcrypt';
 
 /**
- * Creates a new user with a default role of "user"
+ * Creates a new user with default role "user"
  */
 const createUser = async (name, email, passwordHash) => {
-    const defaultRole = 'user';
+    try {
 
-    const query = `
-        INSERT INTO users (name, email, password_hash, role_id)
-        VALUES ($1, $2, $3, 
-            (SELECT role_id FROM roles WHERE role_name = $4)
-        )
-        RETURNING user_id;
-    `;
+        email = email.trim().toLowerCase(); 
 
-    const params = [name, email, passwordHash, defaultRole];
+        const result = await db.query(
+            `INSERT INTO users (name, email, password_hash, role_id)
+             VALUES ($1, $2, $3,
+                (SELECT role_id FROM roles WHERE role_name = $4)
+             )
+             RETURNING user_id`,
+            [name, email, passwordHash, 'user']
+        );
 
-    const result = await db.query(query, params);
+        if (result.rows.length === 0) {
+            throw new Error('Failed to create user');
+        }
 
-    if (result.rows.length === 0) {
-        throw new Error('Failed to create user');
+        const userId = result.rows[0].user_id;
+
+        if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING === 'true') {
+            console.log('Created new user with ID:', userId);
+        }
+
+        return userId;
+
+    } catch (error) {
+        console.error('Error creating user:', error);
+        throw error;
     }
-
-    // Optional SQL logging (for development/debugging)
-    if (process.env.ENABLE_SQL_LOGGING === 'true') {
-        console.log('Created new user with ID:', result.rows[0].user_id);
-    }
-
-    return result.rows[0].user_id;
 };
 
 /**
- * Finds a user by email and includes their role name
+ * Finds a user by email (includes role)
  */
 const findUserByEmail = async (email) => {
-    const query = `
-        SELECT 
-            u.user_id,
-            u.name,
-            u.email,
-            u.password_hash,
-            r.role_name
-        FROM users u
-        JOIN roles r ON u.role_id = r.role_id
-        WHERE u.email = $1;
-    `;
+    try {
+        const result = await db.query(
+            `SELECT 
+                u.user_id,
+                u.name,
+                u.email,
+                u.password_hash,
+                r.role_name
+             FROM users u
+             JOIN roles r ON u.role_id = r.role_id
+             WHERE LOWER(u.email) = LOWER($1)`,
+            [email]
+        );
 
-    const result = await db.query(query, [email]);
+        return result.rows[0] || null;
 
-    if (result.rows.length === 0) {
-        return null;
+    } catch (error) {
+        console.error('Error finding user by email:', error);
+        throw error;
     }
-
-    return result.rows[0];
 };
 
 /**
- * Verifies a plain password against a hashed password
+ * Verifies password using bcrypt
  */
 const verifyPassword = async (password, passwordHash) => {
     return bcrypt.compare(password, passwordHash);
 };
 
 /**
- * Authenticates a user by email and password
- * Removes password_hash before returning user object
+ * Authenticates user credentials
  */
 const authenticateUser = async (email, password) => {
-    const user = await findUserByEmail(email);
+    try {
 
-    if (!user) {
-        return null;
+        email = email.trim().toLowerCase();
+
+        const user = await findUserByEmail(email);
+
+        if (!user) return null;
+
+        const isMatch = await verifyPassword(password, user.password_hash);
+
+        if (!isMatch) return null;
+
+        // Remove sensitive data
+        delete user.password_hash;
+
+        return user;
+
+    } catch (error) {
+        console.error('Error authenticating user:', error);
+        throw error;
     }
-
-    const isMatch = await verifyPassword(password, user.password_hash);
-
-    if (!isMatch) {
-        return null;
-    }
-
-    // Remove sensitive data before returning
-    delete user.password_hash;
-
-    return user;
 };
 
 /**
- * Retrieves all users with their roles
- * Used for admin-only users page
+ * Retrieves all users with roles (admin view)
  */
 const getAllUsers = async () => {
-    const query = `
-        SELECT 
-            u.user_id,
-            u.name,
-            u.email,
-            r.role_name
-        FROM users u
-        JOIN roles r ON u.role_id = r.role_id
-        ORDER BY u.user_id;
-    `;
+    try {
+        const result = await db.query(`
+            SELECT 
+                u.user_id,
+                u.name,
+                u.email,
+                r.role_name
+            FROM users u
+            JOIN roles r ON u.role_id = r.role_id
+            ORDER BY u.user_id
+        `);
 
-    const result = await db.query(query);
-    return result.rows;
+        return result.rows;
+
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw error;
+    }
+};
+
+/**
+ * Retrieves projects associated with a user
+ */
+const getUserProjects = async (userId) => {
+    try {
+        const result = await db.query(
+            `SELECT sp.*
+             FROM project_volunteers pv
+             JOIN service_project sp 
+                ON pv.project_id = sp.project_id
+             WHERE pv.user_id = $1`,
+            [userId]
+        );
+
+        return result.rows;
+
+    } catch (error) {
+        console.error('Error fetching user projects:', error);
+        throw error;
+    }
 };
 
 export {
@@ -111,5 +147,6 @@ export {
     findUserByEmail,
     verifyPassword,
     authenticateUser,
+    getUserProjects,
     getAllUsers
 };

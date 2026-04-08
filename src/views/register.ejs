@@ -1,8 +1,11 @@
 <%- include('partials/header') %>
+
 <main>
     <h1><%= title %></h1>
 
-    <form action="/register" method="POST">
+    <form action="/register" method="POST" autocomplete="on">
+
+        <!-- NAME -->
         <div class="form-group">
             <label for="name">Name</label>
             <input
@@ -10,9 +13,14 @@
                 id="name"
                 name="name"
                 required
+                minlength="2"
+                maxlength="100"
+                autofocus
+                autocomplete="name"
             />
         </div>
         
+        <!-- EMAIL -->
         <div class="form-group">
             <label for="email">Email (Username)</label>
             <input
@@ -20,9 +28,11 @@
                 id="email"
                 name="email"
                 required
+                autocomplete="email"
             />
         </div>
 
+        <!-- PASSWORD -->
         <div class="form-group">
             <label for="password">Password</label>
             <input
@@ -30,11 +40,20 @@
                 id="password"
                 name="password"
                 required
+                minlength="6"
+                autocomplete="new-password"
             />
         </div>
 
         <button type="submit">Register</button>
+
     </form>
 
+    <p>
+        Already have an account?
+        <a href="/login">Login here</a>
+    </p>
+
 </main>
+
 <%- include('partials/footer') %>

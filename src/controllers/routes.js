@@ -22,7 +22,10 @@ import {
     processNewProjectForm,
     projectValidation,
     showEditProjectForm,
-    processEditProjectForm
+    processEditProjectForm,
+    volunteerProject,
+    unvolunteerProject,
+    showUserVolunteeredProjects
 } from './service_projects.js';
 
 import { testErrorPage } from './errors.js';
@@ -66,12 +69,12 @@ router.post('/login', processLoginForm);
 
 router.get('/logout', processLogout);
 
-// Public pages
+// Public content
 router.get('/project/:id', showProjectDetailsPage);
 router.get('/organization/:id', showOrganizationDetailsPage);
 router.get('/category/:id', buildCategoryPage);
 
-// Test route
+// Test error
 router.get('/test-error', testErrorPage);
 
 
@@ -81,20 +84,26 @@ router.get('/test-error', testErrorPage);
  * =========================
  */
 
-// Dashboard (requires login)
-router.get('/dashboard', requireLogin, showDashboard);
+router.use(requireLogin);
+
+// Dashboard
+router.get('/dashboard', showUserVolunteeredProjects);
 
 // Home
-router.get('/', requireLogin, showHomePage);
+router.get('/', showHomePage);
 
 // Organizations
-router.get('/organizations', requireLogin, showOrganizationsPage);
+router.get('/organizations', showOrganizationsPage);
 
 // Projects
-router.get('/projects', requireLogin, showProjectsPage);
+router.get('/projects', showProjectsPage);
 
 // Categories
-router.get('/categories', requireLogin, showCategoriesPage);
+router.get('/categories', showCategoriesPage);
+
+// Volunteer routes
+router.post('/project/:id/volunteer', volunteerProject);
+router.post('/project/:id/unvolunteer', unvolunteerProject);
 
 
 /**
@@ -103,40 +112,42 @@ router.get('/categories', requireLogin, showCategoriesPage);
  * =========================
  */
 
-// Users page (admin only)
-router.get('/users', requireRole('admin'), usersPage);
+router.use(requireRole('admin'));
+
+// Users
+router.get('/users', usersPage);
 
 /**
  * ---- ORGANIZATIONS ----
  */
-router.get('/new-organization', requireRole('admin'), showNewOrganizationForm);
-router.post('/new-organization', requireRole('admin'), organizationValidation, processNewOrganizationForm);
+router.get('/new-organization', showNewOrganizationForm);
+router.post('/new-organization', organizationValidation, processNewOrganizationForm);
 
-router.get('/edit-organization/:id', requireRole('admin'), showEditOrganizationForm);
-router.post('/edit-organization/:id', requireRole('admin'), organizationValidation, processEditOrganizationForm);
+router.get('/edit-organization/:id', showEditOrganizationForm);
+router.post('/edit-organization/:id', organizationValidation, processEditOrganizationForm);
 
 /**
  * ---- PROJECTS ----
  */
-router.get('/new-project', requireRole('admin'), showNewProjectForm);
-router.post('/new-project', requireRole('admin'), projectValidation, processNewProjectForm);
+router.get('/new-project', showNewProjectForm);
+router.post('/new-project', projectValidation, processNewProjectForm);
 
-router.get('/edit-project/:id', requireRole('admin'), showEditProjectForm);
-router.post('/edit-project/:id', requireRole('admin'), projectValidation, processEditProjectForm);
+router.get('/edit-project/:id', showEditProjectForm);
+router.post('/edit-project/:id', projectValidation, processEditProjectForm);
 
 /**
  * ---- CATEGORIES ----
  */
-router.get('/new-category', requireRole('admin'), showNewCategoryForm);
-router.post('/new-category', requireRole('admin'), categoryValidation, processNewCategoryForm);
+router.get('/new-category', showNewCategoryForm);
+router.post('/new-category', categoryValidation, processNewCategoryForm);
 
-router.get('/edit-category/:id', requireRole('admin'), showEditCategoryForm);
-router.post('/edit-category/:id', requireRole('admin'), categoryValidation, processEditCategoryForm);
+router.get('/edit-category/:id', showEditCategoryForm);
+router.post('/edit-category/:id', categoryValidation, processEditCategoryForm);
 
 /**
  * ---- ASSIGN CATEGORIES ----
  */
-router.get('/assign-categories/:projectId', requireRole('admin'), showAssignCategoriesForm);
-router.post('/assign-categories/:projectId', requireRole('admin'), processAssignCategoriesForm);
+router.get('/assign-categories/:projectId', showAssignCategoriesForm);
+router.post('/assign-categories/:projectId', processAssignCategoriesForm);
 
 export default router;

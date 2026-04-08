@@ -1,15 +1,29 @@
 <%- include('../partials/header') %>
-<main>
-    <h1>Something Went Wrong</h1>
-    <p>We are experiencing technical difficulties. Our team has been notified and is working to fix the issue.</p>
-    <p>Return to the <a href="/">homepage</a> to continue browsing.</p>
-    
-    <% if (NODE_ENV === 'development') { %>
-        <details open>
+
+<main class="error-page">
+    <h1>500 - Something Went Wrong</h1>
+
+    <p>
+        We're experiencing technical difficulties. Our team has been notified and is working to fix the issue.
+    </p>
+
+    <div class="error-actions">
+        <a href="/" class="btn btn-primary">Go to Homepage</a>
+    </div>
+
+    <% if (process.env.NODE_ENV === 'development' && error) { %>
+        <details class="error-details" open>
             <summary>Error Details (Development Only)</summary>
-            <pre><%= error %></pre>
-            <pre><%= stack %></pre>
+
+            <% if (error.message) { %>
+                <pre><%= error.message %></pre>
+            <% } %>
+
+            <% if (error.stack) { %>
+                <pre><%= error.stack %></pre>
+            <% } %>
         </details>
     <% } %>
 </main>
+
 <%- include('../partials/footer') %>

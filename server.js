@@ -23,7 +23,7 @@ const app = express();
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: { maxAge: 60 * 60 * 1000 }
 }));
 
@@ -60,7 +60,7 @@ app.use((req, res, next) => {
 });
 
 /**
- * 🔥 MIDDLEWARE GLOBAL PARA VISTAS (AQUÍ ESTÁ LA MAGIA)
+ * 🔥 MIDDLEWARE GLOBAL PARA VISTAS (FIX COMPLETO)
  */
 app.use((req, res, next) => {
     // Estado de login
@@ -70,11 +70,14 @@ app.use((req, res, next) => {
         res.locals.isLoggedIn = true;
     }
 
-    // 🔥 AGREGADO IMPORTANTE: hacer disponible el usuario en todas las vistas
+    // Usuario disponible en vistas
     res.locals.user = req.session?.user || null;
 
     // Environment
     res.locals.NODE_ENV = NODE_ENV;
+
+    // 🔥 CLAVE: pasar la URL a EJS
+    res.locals.url = req.originalUrl;
 
     next();
 });

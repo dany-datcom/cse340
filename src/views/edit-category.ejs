@@ -5,15 +5,17 @@
 
     <form action="/edit-category/<%= category.category_id %>" method="POST">
 
-        <!-- NAME -->
+        <!-- CATEGORY NAME -->
         <div class="form-group">
             <label for="name">Category Name</label>
+
             <input 
                 type="text" 
                 id="name" 
                 name="name" 
                 value="<%= category.name %>" 
                 maxlength="100"
+                minlength="3"
                 required
             />
         </div>
@@ -22,9 +24,9 @@
 
     </form>
 
-    <br>
-
-    <a href="/categories">← Back to Categories</a>
+    <div class="back-link">
+        <a href="/categories">← Back to Categories</a>
+    </div>
 
 </main>
 

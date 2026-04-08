@@ -6,19 +6,27 @@
 
     <h2>Projects in this category:</h2>
 
-    <ul>
-        <% projects.forEach(project=> { %>
-            <li>
-                <a href="/project/<%= project.project_id %>">
-                    <%= project.title %>
-                </a>
-            </li>
-            <% }) %>
+    <ul class="category-list">
+        <% if (projects && projects.length> 0) { %>
+            <% projects.forEach(project=> { %>
+                <li>
+                    <a href="/project/<%= project.project_id %>">
+                        <%= project.title %>
+                    </a>
+                </li>
+                <% }) %>
+                    <% } else { %>
+                        <li>No projects found for this category.</li>
+                        <% } %>
     </ul>
+
     <div class="action-buttons">
-        <a href="/edit-category/<%= category.category_id %>">
-            Edit Category
-        </a>
+        <% if (isAdmin) { %>
+            <div class="center-buttons">
+
+                <a href="/edit-category/<%= category.category_id %>" class="btn btn-secondary">Edit Category</a>
+            </div>
+            <% } %>
     </div>
 
     <%- include('partials/footer.ejs') %>

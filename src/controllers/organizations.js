@@ -1,50 +1,102 @@
-import { getAllOrganizations, getOrganizationDetails, updateOrganization } from '../models/organizations.js';
+import {
+    getAllOrganizations,
+    getOrganizationDetails,
+    updateOrganization
+} from '../models/organizations.js';
+
 import { getProjectsByOrganizationId } from '../models/service_project.js';
 import { createOrganization } from '../models/organization.js';
 import { body, validationResult } from 'express-validator';
+import { title } from 'process';
 
-//Define validation and sanitization rules for organization form
-//Define validation rules for organization 
-
+/**
+ * Validation rules for organization forms
+ */
 const organizationValidation = [
     body('name')
         .trim()
-        .notEmpty()
-        .withMessage('organization name is required')
-        .isLength({ min: 3, max: 150 })
-        .withMessage('Organization name must be between 3 and 150 characters'),
+        .notEmpty().withMessage('Organization name is required')
+        .isLength({ min: 3, max: 150 }).withMessage('Organization name must be between 3 and 150 characters'),
 
     body('description')
         .trim()
-        .notEmpty()
-        .withMessage('Organization description is required')
-        .isLength({ max: 500 })
-        .withMessage('Organization description cannot exceed 500 characters'),
+        .notEmpty().withMessage('Organization description is required')
+        .isLength({ max: 500 }).withMessage('Organization description cannot exceed 500 characters'),
 
     body('contactEmail')
         .normalizeEmail()
-        .notEmpty()
-        .withMessage('Contact email is required')
-        .isEmail()
-        .withMessage('Please provide a valid email address')
+        .notEmpty().withMessage('Contact email is required')
+        .isEmail().withMessage('Please provide a valid email address')
 ];
 
+/**
+ * Displays all organizations
+ */
 const showOrganizationsPage = async (req, res) => {
-    const organizations = await getAllOrganizations();
-    const title = 'Our Partner Organizations';
+    try {
+        const organizations = await getAllOrganizations();
 
-    res.render('organizations', { title, organizations });
-}
+        res.render('organizations', {
+            title: 'Organizations',
+            organizations,
+            isAdmin: req.session.user?.role_name === 'admin'
+        });
 
+    } catch (error) {
+        console.error('Error fetching organizations:', error);
+
+        res.status(500).render('errors/500', {
+            title: 'Server Error'
+        });
+    }
+};
+
+/**
+ * Displays organization details and associated projects
+ */
 const showOrganizationDetailsPage = async (req, res) => {
-    const organizationId = req.params.id;
-    const organizationDetails = await getOrganizationDetails(organizationId);
-    const projects = await getProjectsByOrganizationId(organizationId);
-    const title = organizationDetails.name;
+    const { id: organizationId } = req.params;
 
-    res.render('organization', { title, organizationDetails, projects });
-}
+    try {
+        const organizationDetails = await getOrganizationDetails(organizationId);
 
+        // Validate if organization exists
+        if (!organizationDetails) {
+            return res.status(404).render('errors/404', {
+                title: 'Organization Not Found'
+            });
+        }
+
+        const projects = await getProjectsByOrganizationId(organizationId);
+
+        res.render('organization', {
+            title: 'Organization Details',
+            organizationDetails,
+            projects,
+            isAdmin: req.session.user?.role_name === 'admin'
+        });
+    } catch (error) {
+        console.error('Error loading organization details:', error);
+
+        res.status(500).render('errors/500', {
+            title: 'Server Error'
+        });
+    }
+};
+
+/**
+ * Displays form to create a new organization
+ */
+const showNewOrganizationForm = (req, res) => {
+    res.render('new-organization', {
+        title: 'Add New Organization',
+        isAdmin: req.session.user?.role_name === 'admin'
+    });
+};
+
+/**
+ * Handles creation of a new organization
+ */
 const processNewOrganizationForm = async (req, res) => {
     const results = validationResult(req);
 
@@ -52,60 +104,103 @@ const processNewOrganizationForm = async (req, res) => {
         results.array().forEach((error) => {
             req.flash('error', error.msg);
         });
+
         return res.redirect('/new-organization');
     }
 
-    const { name, description, contactEmail } = req.body;
-    const logoFilename = 'placeholder-logo.png'; // Assuming you're using multer for file uploads
+    try {
+        const { name, description, contactEmail } = req.body;
 
-    const organizationId = await createOrganization(
-        name,
-        description,
-        contactEmail,
-        logoFilename
-    );
+        // Placeholder logo (can be replaced with file upload logic)
+        const logoFilename = 'placeholder-logo.png';
 
+        const organizationId = await createOrganization(
+            name,
+            description,
+            contactEmail,
+            logoFilename
+        );
 
-    res.redirect(`/organization/${organizationId}`);
-}
+        req.flash('success', 'Organization created successfully!');
+        res.redirect(`/organization/${organizationId}`);
 
-const showNewOrganizationForm = async (req, res) => {
-    const title = 'Add New Organization';
+    } catch (error) {
+        console.error('Error creating organization:', error);
 
-    res.render('new-organization', { title });
-}
+        req.flash('error', 'Failed to create organization.');
+        res.redirect('/new-organization');
+    }
+};
 
+/**
+ * Displays form to edit an existing organization
+ */
 const showEditOrganizationForm = async (req, res) => {
-    const organizationId = req.params.id;
-    const organizationDetails = await getOrganizationDetails(organizationId)
+    const { id: organizationId } = req.params;
 
-    const title = 'Edit Organization'
-    res.render('edit-organization', { title, organizationDetails })
-}
+    try {
+        const organizationDetails = await getOrganizationDetails(organizationId);
 
+        // Validate if organization exists
+        if (!organizationDetails) {
+            return res.status(404).render('errors/404', {
+                title: 'Organization Not Found'
+            });
+        }
+
+        res.render('edit-organization', {
+            title: 'Edit Organization',
+            organizationDetails,
+            isAdmin: req.session.user?.role_name === 'admin'
+        });
+
+    } catch (error) {
+        console.error('Error loading organization for edit:', error);
+
+        res.status(500).render('errors/500', {
+            title: 'Server Error'
+        });
+    }
+};
+
+/**
+ * Handles updating an existing organization
+ */
 const processEditOrganizationForm = async (req, res) => {
     const results = validationResult(req);
 
     if (!results.isEmpty()) {
-        // Validation failed - loop through errors
         results.array().forEach((error) => {
             req.flash('error', error.msg);
         });
 
-        // Redirect back to the edit organization form
-        return res.redirect('/edit-organization/' + req.params.id);
+        return res.redirect(`/edit-organization/${req.params.id}`);
     }
-    const organizationId = req.params.id;
-    const { name, description, contactEmail, logoFilename } = req.body;
 
-    await updateOrganization(organizationId, name, description, contactEmail, logoFilename);
+    const { id: organizationId } = req.params;
 
-    // Set a success flash message
-    req.flash('success', 'Organization updated successfully!');
+    try {
+        const { name, description, contactEmail, logoFilename } = req.body;
 
-    res.redirect(`/organization/${organizationId}`);
+        await updateOrganization(
+            organizationId,
+            name,
+            description,
+            contactEmail,
+            logoFilename,
+            
+        );
+
+        req.flash('success', 'Organization updated successfully!');
+        res.redirect(`/organization/${organizationId}`);
+
+    } catch (error) {
+        console.error('Error updating organization:', error);
+
+        req.flash('error', 'Failed to update organization.');
+        res.redirect(`/edit-organization/${organizationId}`);
+    }
 };
-
 
 export {
     showOrganizationsPage,
@@ -116,4 +211,3 @@ export {
     showEditOrganizationForm,
     processEditOrganizationForm
 };
-

@@ -1,30 +1,50 @@
 <%- include('partials/header') %>
 
-    <main>
-        <h1>
-            <%= title %>
-        </h1>
+<main>
+    <h1><%= title %></h1>
 
-        <form action="/new-organization" method="POST">
-            <div class="form-group">
-                <label for="name">Organization Name</label>
-                <input type="text" id="name" name="name" required maxlength="150" />
-            </div>
+    <form action="/new-organization" method="POST">
 
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" required maxlength="500">
-                </textarea>
-            </div>
+        <!-- ORGANIZATION NAME -->
+        <div class="form-group">
+            <label for="name">Organization Name</label>
+            <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                required 
+                maxlength="150"
+                minlength="3"
+                autofocus
+            />
+        </div>
 
-            <div class="form-group">
-                <label for="contactEmail">Contact Email</label>
-                <input type="email" id="contactEmail" name="contactEmail" required/>
-            </div>
+        <!-- DESCRIPTION -->
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea 
+                id="description" 
+                name="description" 
+                required 
+                maxlength="500"
+            ></textarea>
+        </div>
 
-            <button type="submit">Create Organization</button>
-        </form>
+        <!-- CONTACT EMAIL -->
+        <div class="form-group">
+            <label for="contactEmail">Contact Email</label>
+            <input 
+                type="email" 
+                id="contactEmail" 
+                name="contactEmail" 
+                required
+                autocomplete="email"
+            />
+        </div>
 
-    </main>
-    <%- include('partials/footer') %>
- 
+        <button type="submit">Create Organization</button>
+
+    </form>
+</main>
+
+<%- include('partials/footer') %>

@@ -2,9 +2,11 @@ import bcrypt from 'bcrypt';
 import {
     createUser,
     authenticateUser,
-    getAllUsers
+    getAllUsers,
+    getUserProjects
 } from "../models/users.js";
 import { body, validationResult } from 'express-validator';
+import db from '../models/db.js';
 
 /**
  * Validation rules for user registration
@@ -28,17 +30,16 @@ const userRegistrationValidation = [
 ];
 
 /**
- * Render registration form
+ * Renders registration form
  */
 const showUserRegistrationForm = (req, res) => {
     res.render('register', { title: 'Register' });
 };
 
 /**
- * Handle registration form submission
+ * Handles user registration
  */
 const processUserRegistrationForm = async (req, res) => {
-    const { name, email, password } = req.body;
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -47,11 +48,11 @@ const processUserRegistrationForm = async (req, res) => {
     }
 
     try {
-        // Hash password before storing
-        const salt = await bcrypt.genSalt(10);
-        const passwordHash = await bcrypt.hash(password, salt);
+        const { name, email, password } = req.body;
 
-        // Create user in database
+        // Hash password securely
+        const passwordHash = await bcrypt.hash(password, 10);
+
         await createUser(name, email, passwordHash);
 
         req.flash('success', 'Registration successful! Please log in.');
@@ -59,80 +60,103 @@ const processUserRegistrationForm = async (req, res) => {
 
     } catch (error) {
         console.error('Error registering user:', error);
+
         req.flash('error', 'An error occurred during registration.');
         res.redirect('/register');
     }
 };
 
 /**
- * Render login form
+ * Renders login form
  */
 const showLoginForm = (req, res) => {
-    res.render('login', { title: 'Login' });
+    res.render('login', {
+        title: 'Login',
+        authRequired: req.query.auth === 'required'
+    });
 };
 
+
 /**
- * Handle login logic
+ * Handles login logic
  */
 const processLoginForm = async (req, res) => {
-    const { email, password } = req.body;
-
     try {
+        const { email, password } = req.body;
+
         const user = await authenticateUser(email, password);
+
 
         if (!user) {
             req.flash('error', 'Invalid email or password.');
             return res.redirect('/login');
         }
 
-        // Store user in session
-        req.session.user = user;
+        // Store only necessary user data in session
+        req.session.user = {
+            user_id: user.user_id,
+            name: user.name,
+            email: user.email,
+            role_name: user.role_name
+        };
 
         req.flash('success', 'Login successful!');
 
+
         if (process.env.NODE_ENV === 'development') {
-            console.log('User logged in:', user);
+            console.log('User logged in:', req.session.user);
         }
 
-        res.redirect('/dashboard');
+        req.session.save(() => {
+            res.redirect('/dashboard');
+        });
 
     } catch (error) {
         console.error('Error during login:', error);
+
         req.flash('error', 'An error occurred during login.');
         res.redirect('/login');
     }
 };
 
 /**
- * Handle logout
+ * Handles logout
  */
 const processLogout = (req, res) => {
-    if (req.session.user) {
-        delete req.session.user;
-    }
+    try {
+        if (req.session) {
+            // Destroy session completely (more secure than delete)
+            req.session.destroy(() => {
+                res.redirect('/login');
+            });
+        } else {
+            res.redirect('/login');
+        }
 
-    req.flash('success', 'Logout successful!');
-    res.redirect('/login');
+    } catch (error) {
+        console.error('Error during logout:', error);
+
+        res.redirect('/login');
+    }
 };
 
 /**
  * Middleware: requires user to be logged in
  */
 const requireLogin = (req, res, next) => {
-    if (!req.session || !req.session.user) {
-        req.flash('error', 'You must be logged in to access this page.');
-        return res.redirect('/login');
+    if (req.session?.user) {
+        return next();
     }
-    next();
-};
 
+    return res.redirect('/login');
+};
 /**
- * Middleware factory: requires specific role (e.g., admin)
- */
+    * Middleware factory: requires specific role (e.g., admin)
+    */
 const requireRole = (role) => {
     return (req, res, next) => {
 
-        if (!req.session || !req.session.user) {
+        if (!req.session?.user) {
             req.flash('error', 'You must be logged in.');
             return res.redirect('/login');
         }
@@ -147,20 +171,32 @@ const requireRole = (role) => {
 };
 
 /**
- * Render dashboard (requires login)
+ * Displays user dashboard with their projects
  */
-const showDashboard = (req, res) => {
-    const user = req.session.user;
+const showDashboard = async (req, res) => {
+    try {
+        const user = req.session.user;
 
-    res.render('dashboard', {
-        title: 'Dashboard',
-        name: user.name,
-        email: user.email
-    });
+        const projects = await getUserProjects(user.user_id);
+
+        res.render('dashboard', {
+            title: 'Dashboard',
+            name: user.name,
+            email: user.email,
+            projects
+        });
+
+    } catch (error) {
+        console.error('Error loading dashboard:', error);
+
+        res.status(500).render("errors/500", {
+            title: "Server Error"
+        });
+    }
 };
 
 /**
- * Admin-only page: list all users
+ * Admin-only page: lists all users
  */
 const usersPage = async (req, res) => {
     try {
@@ -173,6 +209,7 @@ const usersPage = async (req, res) => {
 
     } catch (error) {
         console.error('Error loading users:', error);
+
         req.flash('error', 'Error loading users.');
         res.redirect('/');
     }

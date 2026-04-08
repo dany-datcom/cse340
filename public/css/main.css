@@ -4,7 +4,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-
 /* ============================= */
 /*        RESET BÁSICO           */
 /* ============================= */
@@ -15,9 +14,8 @@
     box-sizing: border-box;
 }
 
-
 /* ============================= */
-/*        VARIABLES (COLORS)     */
+/*        VARIABLES              */
 /* ============================= */
 
 :root {
@@ -30,9 +28,8 @@
     --white: #ffffff;
 }
 
-
 /* ============================= */
-/*        BODY GENERAL           */
+/*        BODY                  */
 /* ============================= */
 
 body {
@@ -42,31 +39,28 @@ body {
     line-height: 1.6;
 }
 
-
 /* ============================= */
-/*        LINKS                  */
+/*        LINKS                 */
 /* ============================= */
 
 a {
     color: var(--secondary-color);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 a:hover {
     color: var(--accent-color);
-    text-decoration: underline;
 }
 
-
 /* ============================= */
-/*        NAVIGATION             */
+/*        NAVIGATION            */
 /* ============================= */
 
 nav {
     background-color: var(--primary-color);
     padding: 1rem 2rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 nav ul {
@@ -77,22 +71,170 @@ nav ul {
 }
 
 nav ul li a {
-    color: var(--text-color); /* FIX */
+    color: var(--black); /* FIX */
     font-weight: 500;
-    font-size: 1rem;
     padding: 0.5rem 0.8rem;
     border-radius: 6px;
-    transition: all 0.3s ease;
 }
 
 nav ul li a:hover {
     background-color: var(--secondary-color);
+}
+.project-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* el título ocupa todo el espacio disponible */
+.project-title {
+    flex: 1;
+}
+
+/* botón SIEMPRE mismo tamaño */
+.remove-btn {
+    min-width: 120px;
+    text-align: center;
+}
+
+/* ============================= */
+/*   CATEGORY LIST CENTER 🔥     */
+/* ============================= */
+
+.category-list {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 0;
+}
+
+/* cada item */
+.category-list li {
+    margin-bottom: 0.8rem;
+}
+
+/* links estilo card */
+.category-list a {
+    display: block;
+    text-align: center;
+
+    background: var(--white);
+    padding: 0.9rem;
+    border-radius: 10px;
+
+    font-weight: 500;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+
+    transition: all 0.2s ease;
+}
+
+/* hover bonito */
+.category-list a:hover {
+    background-color: var(--accent-color);
+    color: var(--white);
     transform: translateY(-2px);
 }
 
+/* ============================= */
+/*   CATEGORY CHECKBOX FIX 🔥    */
+/* ============================= */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+/* cada fila */
+.category-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    background: var(--white);
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+
+    cursor: pointer;
+}
+
+/* checkbox tamaño consistente */
+.category-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+/* texto */
+.category-item span {
+    flex: 1;
+}
+
+/* hover bonito */
+.category-item:hover {
+    background-color: #f1f5ff;
+}
+
+/* checked state */
+.category-item input:checked + span {
+    font-weight: 600;
+    color: var(--primary-color);
+}
 
 /* ============================= */
-/*        FLASH MESSAGES         */
+/*    CATEGORY LIST ALIGNMENT    */
+/* ============================= */
+
+.category-list {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 0;
+}
+
+.category-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+    background: var(--white);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 0.8rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* nombre ocupa todo el espacio */
+.category-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+/* evita que el form empuje cosas */
+.category-row form {
+    margin: 0;
+}
+
+/* botón tamaño consistente */
+.category-row button {
+    min-width: 100px;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+    .category-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .category-row button {
+        width: 100%;
+    }
+}
+
+/* ============================= */
+/*        FLASH                */
 /* ============================= */
 
 .alert {
@@ -101,89 +243,157 @@ nav ul li a:hover {
     border-radius: 6px;
 }
 
-.alert.success {
-    color: #155724;
-    background-color: #d4edda;
-}
-
-.alert.error {
-    color: #721c24;
-    background-color: #f8d7da;
-}
-
-.alert.warning {
-    color: #856404;
-    background-color: #fff3cd;
-}
-
-.alert.info {
-    color: #0c5460;
-    background-color: #d1ecf1;
-}
-
+.alert.success { background: #d4edda; }
+.alert.error { background: #f8d7da; }
 
 /* ============================= */
-/*        MAIN CONTENT           */
+/*        MAIN                 */
 /* ============================= */
 
 main {
-    padding: 0 1rem;
+    max-width: 1000px;
+    margin: auto;
+    padding: 1rem 1.5rem;
 }
 
-
 /* ============================= */
-/*        HEADER TITLE           */
+/*        TITLES               */
 /* ============================= */
 
 h1 {
     text-align: center;
-    margin: 3rem 0 2rem;
-    font-size: 2.5rem;
+    margin: 2rem 0;
     color: var(--primary-color);
 }
 
+h2, h3 {
+    margin: 1rem 0;
+    color: var(--primary-color);
+}
 
 /* ============================= */
-/*        LISTS (CARDS)          */
+/*        LISTAS (SAFE)        */
 /* ============================= */
 
 ul {
-    max-width: 800px;
-    margin: 0 auto 4rem;
     list-style: none;
-    padding: 0 1rem;
 }
 
 ul li {
-    background-color: var(--white);
+    background: var(--white);
     margin-bottom: 1rem;
-    padding: 1.2rem 1.5rem;
+    padding: 1rem;
     border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* ============================= */
+/*        PROJECT ITEM         */
+/* ============================= */
+
+.project-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.project-item a {
+    font-weight: 600;
+}
+
+/* ============================= */
+/*        USERS TABLE 🔥        */
+/* ============================= */
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.users-table th,
+.users-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--light-gray);
+    text-align: left;
+}
+
+.users-table th {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.users-table tr:hover {
+    background-color: #f9fafc;
+}
+
+/* roles */
+.role-admin {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.role-user {
+    color: var(--secondary-color);
+}
+
+/* ============================= */
+/*        FORMS               */
+/* ============================= */
+
+form {
+    max-width: 500px;
+    margin: auto;
+}
+
+.inline-form {
+    display: inline;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 0.7rem;
+    border-radius: 6px;
+    border: 1px solid var(--light-gray);
+}
+
+/* ============================= */
+/*        PROJECT PAGE 🔥       */
+/* ============================= */
+
+.project-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+    margin-top: 2rem;
+}
+
+.project-description {
+    margin: 1rem 0;
     font-size: 1.1rem;
-    font-weight: 500;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-ul li:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+.project-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
 }
 
-
-/* ============================= */
-/*        CATEGORY TAGS          */
-/* ============================= */
-
+/* categories */
 .category-tags a {
     display: inline-block;
     margin: 0.3rem;
-    padding: 0.4rem 0.8rem;
+    padding: 0.4rem 0.9rem;
     background-color: var(--light-gray);
     border-radius: 20px;
-    font-size: 0.9rem;
-    color: var(--text-color);
-    transition: all 0.2s ease;
+    font-size: 0.85rem;
 }
 
 .category-tags a:hover {
@@ -191,170 +401,134 @@ ul li:hover {
     color: var(--white);
 }
 
-
-/* ============================= */
-/*        FORMS                  */
-/* ============================= */
-
-form {
-    max-width: 500px;
-    margin: 0 auto;
+/* volunteer section */
+.volunteer-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: #f9fafc;
+    text-align: center;
 }
 
-.form-group {
+.volunteer-active {
     margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    color: #27ae60;
+    font-weight: 600;
 }
 
-input, textarea, select {
-    width: 100%;
-    padding: 0.7rem;
-    margin-top: 0.3rem;
-    border: 1px solid var(--light-gray);
-    border-radius: 6px;
-    font-family: inherit;
-}
-
-input[type="checkbox"] {
-    width: auto;
-}
-
-input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--accent-color);
-}
-
-.users-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.users-table th,
-.users-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-.users-table th {
-    background-color: #f4f4f4;
+/* responsive */
+@media (max-width: 768px) {
+    .project-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 }
 
 /* ============================= */
-/*        BUTTON STYLE           */
+/*        BUTTONS             */
 /* ============================= */
 
 button {
     background-color: var(--secondary-color);
     color: var(--white);
     border: none;
-    padding: 0.8rem 1.5rem;
+    padding: 0.6rem 1rem;
     border-radius: 8px;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
 }
 
 button:hover {
     background-color: var(--accent-color);
-    transform: translateY(-2px);
 }
 
-.action-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin: 2rem 0;
-}
-
+/* botones tipo link */
 .btn {
     display: inline-block;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    color: var(--white);
-}
-
-/* botón principal */
-.btn-primary {
     background-color: var(--secondary-color);
+    color: var(--white);
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
 }
 
-.btn-primary:hover {
-    background-color: var(--accent-color);
-    transform: translateY(-2px);
-}
-
-.btn {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-/* botón secundario */
 .btn-secondary {
     background-color: var(--primary-color);
 }
 
-.btn-secondary:hover {
-    background-color: var(--secondary-color);
-    transform: translateY(-2px);
+/* ============================= */
+/*        CENTER BUTTONS       */
+/* ============================= */
+
+.center-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
 /* ============================= */
-/*        FOOTER                 */
+/*        SECTIONS            */
+/* ============================= */
+
+section {
+    background: var(--white);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* ============================= */
+/*        ADMIN PANEL         */
+/* ============================= */
+
+.admin-panel {
+    border-left: 4px solid var(--accent-color);
+}
+
+/* ============================= */
+/*        FOOTER              */
 /* ============================= */
 
 footer {
-    background-color: var(--primary-color);
+    background: var(--primary-color);
     color: var(--white);
     text-align: center;
-    padding: 1.5rem;
-    font-size: 0.9rem;
+    padding: 1rem;
 }
 
-
 /* ============================= */
-/*        RESPONSIVE DESIGN      */
+/*        RESPONSIVE          */
 /* ============================= */
 
-/* 📱 MOBILE */
 @media (max-width: 768px) {
+
     nav ul {
         flex-direction: column;
-        align-items: center;
         gap: 1rem;
     }
 
-    h1 {
-        font-size: 2rem;
+    main {
+        padding: 1rem;
     }
 
     ul li {
-        font-size: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .project-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 0.5rem;
     }
 }
 
-/* 📱 TABLET */
-@media (min-width: 769px) and (max-width: 1024px) {
-    h1 {
-        font-size: 2.2rem;
-    }
-
-    ul li {
-        font-size: 1.05rem;
-    }
-}
-
-/* 🖥 DESKTOP */
-@media (min-width: 1025px) {
-    h1 {
-        font-size: 2.5rem;
-    }
-
-    ul li {
-        font-size: 1.1rem;
+@media (max-width: 1024px) {
+    main {
+        max-width: 90%;
     }
 }

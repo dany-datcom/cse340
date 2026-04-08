@@ -1,10 +1,12 @@
 <%- include('partials/header') %>
+
   <main>
     <h1>
       <%= projectDetails.title %>
     </h1>
 
     <h2>Assign Categories</h2>
+
     <form action="/assign-categories/<%= projectId %>" method="POST">
 
       <div class="form-group">
@@ -20,7 +22,12 @@
           <% }); %>
       </div>
 
-      <button type="submit">Update Categories</button>
+      <div class="center-buttons">
+        <button type="submit" class="btn btn-secondary"> Update Catergories
+        </button>
+      </div>
 
+    </form>
   </main>
+
   <%- include('partials/footer') %>

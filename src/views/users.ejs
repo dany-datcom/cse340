@@ -23,12 +23,11 @@
                         <td><%= user.name %></td>
                         <td><%= user.email %></td>
 
-                        <!-- Highlight admin users -->
                         <td>
                             <% if (user.role_name === 'admin') { %>
-                                <strong>Admin</strong>
+                                <span class="role-admin">Admin</span>
                             <% } else { %>
-                                User
+                                <span class="role-user">User</span>
                             <% } %>
                         </td>
                     </tr>

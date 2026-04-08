@@ -1,23 +1,59 @@
 <%- include('partials/header') %>
 
-<main>
-    <h1><%= title %></h1>
+    <main>
+        <h1>
+            <%= title %>
+        </h1>
 
-    <section>
-        <h2>Dashboard</h2>
-
-        <p><strong>Name:</strong> <%= name %></p>
-        <p><strong>Email:</strong> <%= email %></p>
-    </section>
-
-    <!-- Admin-only section -->
-    <% if (user && user.role_name === 'admin') { %>
         <section>
-            <h3>Admin Panel</h3>
-            <a href="/users">View All Users</a>
+            <h2>Dashboard</h2>
+
+            <p><strong>Name:</strong>
+                <%= name %>
+            </p>
+            <p><strong>Email:</strong>
+                <%= email %>
+            </p>
         </section>
-    <% } %>
 
-</main>
+        <!-- Volunteer Projects Section -->
+        <section>
+            <h2>My Volunteer Projects</h2>
 
-<%- include('partials/footer') %>
+            <% if (projects && projects.length> 0) { %>
+                <ul>
+                    <% projects.forEach(project=> { %>
+                        <li class="project-item">
+
+                            <strong class="project-title">
+                                <a href="/project/<%= project.project_id %>">
+                                    <%= project.title %>
+                                </a>
+                            </strong>
+
+                            <form action="/project/<%= project.project_id %>/unvolunteer" method="POST"
+                                class="inline-form">
+                                <button type="submit" class="btn btn-secondary remove-btn">
+                                    Remove
+                                </button>
+                            </form>
+
+                        </li>
+                        <% }) %>
+                </ul>
+                <% } else { %>
+                    <p>You have not volunteered for any projects yet.</p>
+                    <% } %>
+        </section>
+
+        <!-- Admin-only section -->
+        <% if (user && user.role_name==='admin' ) { %>
+            <section class="admin-panel">
+                <h3>Admin Panel</h3>
+                <a href="/users">View All Users</a>
+            </section>
+            <% } %>
+
+    </main>
+
+    <%- include('partials/footer') %>

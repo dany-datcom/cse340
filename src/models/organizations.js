@@ -1,52 +1,77 @@
 import db from './db.js';
 
+/**
+ * Retrieves all organizations
+ */
 const getAllOrganizations = async () => {
-    const query = `
-        SELECT organization_id, name, description, contact_email, logo_filename
-        FROM Public.organization;
-    `;
-    const result = await db.query(query);
-    return result.rows;
-}
+    try {
+        const result = await db.query(`
+            SELECT organization_id, name, description, contact_email, logo_filename
+            FROM organization
+            ORDER BY name
+        `);
 
+        return result.rows;
 
+    } catch (error) {
+        console.error('Error fetching organizations:', error);
+        throw error;
+    }
+};
+
+/**
+ * Retrieves details of a specific organization
+ */
 const getOrganizationDetails = async (organizationId) => {
-    const query = `
-        SELECT 
-        organization_id, 
-        name, 
-        description, 
-        contact_email, 
-        logo_filename
-        FROM organization
-        WHERE organization_id = $1;
-    `;
-    const query_params = [organizationId];
-    const result = await db.query(query, query_params);
+    try {
+        const result = await db.query(
+            `SELECT organization_id, name, description, contact_email, logo_filename
+             FROM organization
+             WHERE organization_id = $1`,
+            [organizationId]
+        );
 
-    return result.rows.length > 0 ? result.rows[0] : null;
-}
+        return result.rows[0] || null;
 
+    } catch (error) {
+        console.error('Error fetching organization details:', error);
+        throw error;
+    }
+};
+
+/**
+ * Updates an existing organization
+ */
 const updateOrganization = async (organizationId, name, description, contactEmail, logoFilename) => {
-  const query = `
-    UPDATE organization
-    SET name = $1, description = $2, contact_email = $3, logo_filename = $4
-    WHERE organization_id = $5
-    RETURNING organization_id;
-  `;
+    try {
+        const result = await db.query(
+            `UPDATE organization
+             SET name = $1,
+                 description = $2,
+                 contact_email = $3,
+                 logo_filename = $4
+             WHERE organization_id = $5
+             RETURNING organization_id`,
+            [name, description, contactEmail, logoFilename, organizationId]
+        );
 
-  const query_params = [name, description, contactEmail, logoFilename, organizationId];
-  const result = await db.query(query, query_params);
+        if (result.rows.length === 0) {
+            throw new Error('Organization not found');
+        }
 
-  if (result.rows.length === 0) {
-    throw new Error('Organization not found');
-  }
+        const updatedId = result.rows[0].organization_id;
 
-  if (process.env.ENABLE_SQL_LOGGING === 'true') {
-    console.log('Updated organization with ID:', organizationId);
-  }
+        // Log only in development mode
+        if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING === 'true') {
+            console.log('Updated organization with ID:', updatedId);
+        }
 
-  return result.rows[0].organization_id;
+        return updatedId;
+
+    } catch (error) {
+        console.error('Error updating organization:', error);
+        throw error;
+    }
 };
 
 export { getAllOrganizations, getOrganizationDetails, updateOrganization };

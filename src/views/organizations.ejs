@@ -1,21 +1,39 @@
 <%- include('partials/header') %>
+
     <main>
         <h1>
             <%= title %>
         </h1>
 
         <p>Here are a few of our partner organizations:</p>
+
         <ul>
-            <% organizations.forEach(organization=> { %>
-                <li><img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo"><a
-                        href="/organization/<%= organization.organization_id %>">
-                        <%= organization.name %>
-                    </a>: <%= organization.contact_email %>
-                </li>
-                <% }); %>
+            <% if (organizations && organizations.length> 0) { %>
+                <% organizations.forEach(organization=> { %>
+                    <li class="organization-item">
+                        <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo"
+                            class="organization-logo">
+
+                        <a href="/organization/<%= organization.organization_id %>">
+                            <%= organization.name %>
+                        </a>
+
+                        <span class="organization-email">
+                            (<%= organization.contact_email %>)
+                        </span>
+                    </li>
+                    <% }); %>
+                        <% } else { %>
+                            <li>No organizations available.</li>
+                            <% } %>
         </ul>
+
+        <% if (isAdmin) { %>
+            <div class="center-buttons">
+                <a href="/new-organization" class="btn btn-secondary">Add New Organization</a>
+            </div>
+            <% } %>
+
     </main>
-    <div class="action-buttons">
-        <p><a href="/new-organization">Add New Organization</a></p>
-    </div>
+
     <%- include('partials/footer') %>
