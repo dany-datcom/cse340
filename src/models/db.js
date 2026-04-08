@@ -4,7 +4,7 @@ import { Pool } from 'pg';
  * Initialize PostgreSQL connection pool
  */
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL, // 🔥 FIX
+    connectionString: process.env.DB_URL, // 🔥 FIX
     ssl: {
         rejectUnauthorized: false
     }
