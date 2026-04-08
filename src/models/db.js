@@ -4,11 +4,12 @@ import { Pool } from 'pg';
  * Initialize PostgreSQL connection pool
  */
 const pool = new Pool({
-    connectionString: process.env.DB_URL,
+    connectionString: process.env.DATABASE_URL, // 🔥 FIX
     ssl: {
         rejectUnauthorized: false
     }
 });
+
 /**
  * Database wrapper (adds logging in development mode)
  */
@@ -17,9 +18,6 @@ let db = null;
 if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING === 'true') {
 
     db = {
-        /**
-         * Executes a query with logging enabled
-         */
         async query(text, params) {
             const start = Date.now();
 
@@ -45,23 +43,16 @@ if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING ===
             }
         },
 
-        /**
-         * Provides a client for transactions
-         */
         async connect() {
             return pool.connect();
         },
 
-        /**
-         * Closes all pool connections
-         */
         async close() {
             await pool.end();
         }
     };
 
 } else {
-    // Production / normal mode
     db = {
         query: (text, params) => pool.query(text, params),
         connect: () => pool.connect(),
