@@ -148,6 +148,7 @@ const requireLogin = (req, res, next) => {
         return next();
     }
 
+    req.flash('error', 'You must be logged in to access this page.');
     return res.redirect('/login');
 };
 /**
@@ -163,7 +164,7 @@ const requireRole = (role) => {
 
         if (req.session.user.role_name !== role) {
             req.flash('error', 'You do not have permission to access this page.');
-            return res.redirect('/');
+            return res.redirect('/dashboard');
         }
 
         next();
@@ -183,7 +184,8 @@ const showDashboard = async (req, res) => {
             title: 'Dashboard',
             name: user.name,
             email: user.email,
-            projects
+            projects,
+            user
         });
 
     } catch (error) {

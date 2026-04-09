@@ -47,12 +47,15 @@
         </section>
 
         <!-- Admin-only section -->
+
+
         <% if (user && user.role_name==='admin' ) { %>
             <section class="admin-panel">
                 <h3>Admin Panel</h3>
                 <a href="/users">View All Users</a>
             </section>
             <% } %>
+
 
     </main>
 
