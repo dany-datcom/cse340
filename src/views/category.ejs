@@ -19,7 +19,7 @@
                         <li>No projects found for this category.</li>
                         <% } %>
     </ul>
-
+     <% if (isLoggedIn) { %>
     <div class="action-buttons">
         
             <div class="center-buttons">
@@ -28,5 +28,6 @@
             </div>
     
     </div>
+    <% } %>
 
     <%- include('partials/footer.ejs') %>
