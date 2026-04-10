@@ -33,11 +33,13 @@
         </ul>
 
          <% if (isLoggedIn) { %>
+            <% if (user.role_name === 'admin') { %>
             <div class="center-buttons">
                 <a href="/edit-organization/<%= organizationDetails.organization_id %>" class="btn btn-secondary"> Edit
                     Organization
                 </a>
             </div>
+            <% } %>
         <% } %>
     </main>
 

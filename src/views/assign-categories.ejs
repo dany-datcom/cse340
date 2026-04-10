@@ -21,12 +21,13 @@
           </label>
           <% }); %>
       </div>
-       <% if (isLoggedIn) { %>
-      <div class="center-buttons">
-        <button type="submit" class="btn btn-secondary"> Update Catergories
-        </button>
-      </div>
+      <% if (isLoggedIn) { %>
+        <% if (user.role_name === 'admin') { %>
+          <div class="center-buttons">
+            <button type="submit" class="btn btn-secondary"> Update Categories </button>
+          </div>
         <% } %>
+      <% } %>
 
     </form>
   </main>

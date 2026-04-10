@@ -20,9 +20,11 @@
 
     
     <% if (isLoggedIn) { %>
-        <div class="center-buttons">
-            <a href="/new-category" class="btn btn-secondary">Create New Category</a>
-        </div>
+        <% if (user.role_name === 'admin') { %>
+            <div class="center-buttons">
+                <a href="/new-category" class="btn btn-secondary">Create New Category</a>
+             </div>
+         <% } %>
     <% } %>
 
     <%- include('partials/footer') %>

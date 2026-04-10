@@ -42,7 +42,9 @@
             />
         </div>
          <% if (isLoggedIn) { %>
-        <button type="submit">Create Organization</button>
+            <% if (user.role_name === 'admin') { %>
+                <button type="submit">Create Organization</button>
+            <% } %>
         <% } %>
     </form>
 </main>

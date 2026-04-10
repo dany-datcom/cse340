@@ -17,7 +17,9 @@
     >
 
     <% if (isLoggedIn) { %>
-        <p><a href="/dashboard">My Dashboard</a></p>
+        <% if (user.role_name === 'admin') { %>
+            <p><a href="/dashboard">My Dashboard</a></p>
+        <% } %>
     <% } %>
 </main>
 
